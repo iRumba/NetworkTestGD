@@ -5,4 +5,4 @@ class Screens:
 	const ClientInit = preload("res://scenes/screens/ClientInit.tscn")
 	const ServerMain = preload("res://scenes/screens/ServerMain.tscn")
 	const ClientAuth = preload("res://scenes/screens/ClientAuth.tscn")
-	const ClientMain = preload("res://scripts/screens/ClientMain.tscn")
+	const ClientMain = preload("res://scenes/screens/ClientMain.tscn")
