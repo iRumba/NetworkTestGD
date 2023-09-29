@@ -1,8 +1,6 @@
 extends Message
 
-class_name LoginPlayer
-
-var player_name: String
+class_name LogoutPlayer
 
 func send():
 	super.send_to(1)

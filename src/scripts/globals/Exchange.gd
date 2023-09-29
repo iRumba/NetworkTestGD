@@ -45,14 +45,9 @@ func send(message: int, data: Dictionary):
 	var sender = multiplayer.get_remote_sender_id()
 		
 	if !_messages_callbacks.has(message):
-#		var err = ErrorResponse.new()
-#		err.error = Errors.HANDLER_DOES_NOT_EXISTS
-#		response.rpc_id(sender, message, inst_to_dict(err))
 		printerr("Peer ", sender, " send not handled message ", message)
 		
 	else:	
 		var callback: Callable = _messages_callbacks[message]
-		var res = callback.call(sender, data)
-#		if res is Dictionary:
-#			response.rpc_id(sender, message, res)
+		callback.call(sender, data)
 	pass

@@ -13,14 +13,10 @@ func _process(delta: float) -> void:
 	pass
 
 func login():
-#	var login = PlayerLogin.new()
-#	login.player_name = $CenterContainer/VBoxContainer/PlayerName.text
+	Message.subscribe_response(LoginPlayer, logged_in, true, false)
 	var message: LoginPlayer = Message.create(LoginPlayer)
 	message.player_name = $CenterContainer/VBoxContainer/PlayerName.text
-	message.handle_response(logged_in, true, false)
 	message.send()
-#	Message.LoginResultMsg.instance().sign(logged_in, false, false)
-#	Message.LoginPlayer.instance().send(login)
 
 func logged_in(login_result: LoginResult):
 	get_tree().change_scene_to_packed(Resources.Screens.ClientMain)
