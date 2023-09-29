@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 Resources="*res://scripts/globals/Resources.gd"
 Network="*res://scripts/globals/Network.gd"
 Exchange="*res://scripts/globals/Exchange.gd"
+MessagesConfiguring="*res://scripts/globals/MessagesConfiguring.gd"
 
 [rendering]
 

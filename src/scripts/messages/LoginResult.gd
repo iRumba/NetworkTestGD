@@ -1,4 +1,4 @@
-extends Object
+extends Message
 
 class_name LoginResult
 
@@ -9,6 +9,3 @@ enum Results {
 }
 
 var result: Results
-
-func _init(r: Results) -> void:
-	result = r

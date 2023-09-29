@@ -1,32 +1,58 @@
 extends Node
 
 var _messages_callbacks: Dictionary = {}
+var _responses_callbacks: Dictionary = {}
 
+enum Errors {
+	HANDLER_DOES_NOT_EXISTS = 0,
+	HANDLER_FAILED = 1,
+	INVALID_DATA
+}
 
-func __on_receive(message: int, callback: Callable):
-	if callback.get_bound_arguments_count() > 1:
-		printerr("Callback function must have 0 or 1 arguments")
+class ErrorResponse extends Object:
+	var error: Errors
+	var message: String
+
+func configure_response(message: int, callback: Callable):
+	if _responses_callbacks.has(message):
+		printerr("Message " + str(message) + " already has response handler")
 		return
-	if !_messages_callbacks.has(message):
-		var new_arr: Array[Callable] = []
-		_messages_callbacks[message] = new_arr
+		
+	_responses_callbacks[message] = callback
+
+func configure_handle(message: int, callback: Callable):
+	if _messages_callbacks.has(message):
+		printerr("Message " + str(message) + " already has handler")
+		return
+		
+	_messages_callbacks[message] = callback
 	
-	var callbacks: Array[Callable] = _messages_callbacks[message]
-	
-	callbacks.append(callback)
-	
-#@rpc("any_peer")
-#func __response(message: int)
+@rpc("any_peer")
+func response(message: int, data: Dictionary):
+	var sender = multiplayer.get_remote_sender_id()
+		
+	if !_responses_callbacks.has(message):
+		var err = ErrorResponse.new()
+		err.error = Errors.HANDLER_DOES_NOT_EXISTS
+		printerr("Peer ", sender, " send response to message ", message, "but it not handled")
+		
+	else:	
+		var callback: Callable = _responses_callbacks[message]
+		callback.call(sender, data)
 
 @rpc("any_peer")
-func __send(message: int, data: Dictionary):
-	#var message = Message.MessageInfo.unpack(packed_message)
+func send(message: int, data: Dictionary):	
+	var sender = multiplayer.get_remote_sender_id()
+		
 	if !_messages_callbacks.has(message):
-		return
+#		var err = ErrorResponse.new()
+#		err.error = Errors.HANDLER_DOES_NOT_EXISTS
+#		response.rpc_id(sender, message, inst_to_dict(err))
+		printerr("Peer ", sender, " send not handled message ", message)
 		
-	var callbacks: Array[Callable] = _messages_callbacks[message]
-	for callback in callbacks:
-		var sender = multiplayer.get_remote_sender_id()
+	else:	
+		var callback: Callable = _messages_callbacks[message]
 		var res = callback.call(sender, data)
-		
+#		if res is Dictionary:
+#			response.rpc_id(sender, message, res)
 	pass
